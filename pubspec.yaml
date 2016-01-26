@@ -1,0 +1,12 @@
+name: GridsterDart
+description: A Dart implementation of the Gridster library
+version: 0.0.2
+#author: Alexandre Deceneux
+
+environment:
+  sdk: '>=1.0.0 <2.0.0'
+
+dev_dependencies:
+  test: '>=0.12.0 <0.13.0'
+
+browser: any
