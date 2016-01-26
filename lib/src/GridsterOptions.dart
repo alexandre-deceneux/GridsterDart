@@ -1,29 +1,7 @@
 library GridsterDart.GridsterOptions;
 
-import 'dart:html' as html;
-import 'dart:js';
-
 /**
  * Defines option for the Gridster environnement
- */
-
-/**
- *
-    $scope.gridsterOpts = {
-    width: 'auto',
-    rowHeight: 'match',
-    mobileModeEnabled: true,
-    mobileBreakPoint: 600,
-    resizable: {
-    enabled: true,
-    resize: $scope.resizeme,
-    stop: $scope.resizeend
-    },
-    draggable: {
-    enabled:true,
-    stop: $scope.resizeend
-    }
-    };
  */
 
 class GWidgetMargins{
@@ -31,6 +9,10 @@ class GWidgetMargins{
   int vertical = 0;
 
   GWidgetMargins([int this.horizontal, int this.vertical]);
+
+  toJson(){
+    return [horizontal, vertical];
+  }
 }
 
 class GWidgetPosition{
@@ -45,6 +27,10 @@ class GPixelSize{
   int height = 0;
 
   GPixelSize([int this.width, int this.height]);
+
+  toJson(){
+    return [width, height];
+  }
 }
 
 class GGridCoords{
@@ -75,6 +61,10 @@ class GDraggable{
    * A callback for when dragging stops.
    */
   GDraggableEvent stop = (event, ui){};
+
+  toJson(){
+    return {"start":start, "drag":drag, "stop":stop};
+  }
 }
 
 class GResize{
@@ -119,6 +109,19 @@ class GResize{
    */
   GResizeEvent stop = (event, ui, widget){};
 
+  toJson(){
+    return {
+      "enabled":enabled,
+      "axes":axes,
+      "handle_class":handleClass,
+      "handle_append_to":handleAppendTo,
+      "maxSize":maxSize,
+      "start":start,
+      "resize":resize,
+      "stop":stop
+    };
+  }
+
 }
 
 class GCollision{
@@ -137,6 +140,14 @@ class GCollision{
    * A callback for the first time when a widget leaves its old grid cell.
    */
   GCollisionEvent onOverlapStop = (colliderData){};
+
+  toJson(){
+    return {
+      "on_overlap_start":onOverlapStart,
+      "on_overlap":onOverlap,
+      "on_overlap_stop":onOverlapStop
+    };
+  }
 
 }
 
@@ -160,7 +171,7 @@ class GridsterOptions {
   /**
    * Base widget dimensions in pixels. The first index is the width, the second is the height.
    */
-  GPixelSize      widgetBaseDimensions = new GPixelSize(140, 140);
+  GPixelSize      widgetBaseDimensions = new GPixelSize(400, 225);
 
   /**
    * Add more rows to the grid in addition to those that have been calculated.
@@ -197,7 +208,7 @@ class GridsterOptions {
    * automatically and injected to the <head> of the document. You can set this to false and write your own CSS
    * targeting rows and cols via data-attributes like so: [data-col="1"] { left: 10px; }.
    */
-  bool            autogenerateStylesheet = false;
+  bool            autogenerateStylesheet = true;
 
   /**
    * Don't allow widgets loaded from the DOM to overlap. This is helpful if you're loading widget positions form
@@ -225,5 +236,27 @@ class GridsterOptions {
    * Handle collision events
    */
   GCollision      collision = new GCollision();
+
+  Map toJson(){
+    var json = {
+      "widget_selector":widgetSelector,
+      "widget_margins":widgetMargins.toJson(),
+      "widget_base_dimensions":widgetBaseDimensions.toJson(),
+      "extra_rows":extraRows,
+      "extra_cols":extraCols,
+      "min_cols":minCols,
+      "min_rows":minRows,
+      "max_size_x":maxSizeX,
+      "autogenerate_stylesheet":autogenerateStylesheet,
+      "avoid_overlapped_widgets":avoidOverlappedWidgets,
+      "serialize_params":serializeParams,
+      "draggable":draggable.toJson(),
+      "resize":resize.toJson(),
+      "collision":collision.toJson()
+    };
+    if (maxCols != null)
+      json["maxCols"] = maxCols;
+    return json;
+  }
 
 }
